@@ -1,0 +1,15 @@
+{
+    "name": "siaoynli/press",
+    "description": "a simple laravel package",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "siaoynli",
+            "email": "siaoynli@126.com"
+        }
+    ],
+    "require": {},
+    "require-dev": {
+        "orchestra/testbench": "^4.0"
+    }
+}
