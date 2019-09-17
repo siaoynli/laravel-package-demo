@@ -18,6 +18,7 @@ class PressFileParser
 {
     private $filename;
     private $data;
+    private $rawData;
 
     public function __construct($filename)
     {
@@ -27,28 +28,34 @@ class PressFileParser
         $this->processField();
     }
 
-    public function getData()
+    public function getData() : array
     {
         return $this->data;
+    }
+
+    public function getRawData() : array
+    {
+        return $this->rawData;
     }
 
     private function spiltFile()
     {
         preg_match('/^\-{3}(.*?)\-{3}(.*)/s',
             File::exists($this->filename) ? File::get($this->filename) : $this->filename,
-            $this->data);
+            $this->rawData);
     }
 
     private function explodeData()
     {
 
-        $data = trim($this->data[1]);
+        $data = trim($this->rawData[1]);
+
         foreach (explode(PHP_EOL, $data) as $string) {
             $arr = explode(":", $string);
             $this->data[trim($arr[0])] = trim($arr[1]);
         }
 
-        $this->data["body"] = trim($this->data[2]);
+        $this->data["body"] = trim($this->rawData[2]);
 
     }
 
@@ -56,9 +63,13 @@ class PressFileParser
     {
         foreach ($this->data as $field => $value) {
             $class = "Siaoynli\\Press\\Fields\\" . ucfirst($field);
-            if (class_exists($class) && method_exists($class, "process")) {
-                $this->data = array_merge($this->data, $class::process($field, $value));
+            if (!class_exists($class) && !method_exists($class, "process")) {
+                $class = "Siaoynli\\Press\\Fields\\Extra";
             }
+            $this->data = array_merge(
+                $this->data,
+                $class::process($field, $value, $this->data)
+            );
         }
     }
 }
