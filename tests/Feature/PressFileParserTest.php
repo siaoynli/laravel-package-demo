@@ -11,6 +11,7 @@
 namespace Siaoynli\Press\Tests;
 
 
+use Carbon\Carbon;
 use Orchestra\Testbench\TestCase;
 use Siaoynli\Press\PressFileParser;
 
@@ -25,6 +26,18 @@ class PressFileParserTest extends  TestCase
          $this->assertStringContainsString('title: My Title',$data[1]);
          $this->assertStringContainsString('description: Description here',$data[1]);
          $this->assertStringContainsString('Blog post body here',$data[2]);
+    }
+
+
+    /** @test */
+    public function a_date_field_gets_parsed(){
+
+        $pressFileParser=new PressFileParser("---\ndate: May 14, 1988\n---\n");
+
+        $data=$pressFileParser->getData();
+
+        $this->assertInstanceOf(Carbon::class,$data['date']);
+        $this->assertEquals("05/14/1988",$data["date"]->format("m/d/Y"));
     }
 
 }

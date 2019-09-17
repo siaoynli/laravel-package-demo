@@ -11,6 +11,7 @@
 namespace Siaoynli\Press;
 
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\File;
 
 class PressFileParser
@@ -22,6 +23,8 @@ class PressFileParser
     {
         $this->filename = $filename;
         $this->spiltFile();
+        $this->explodeData();
+        $this->processField();
     }
 
     public function getData()
@@ -32,7 +35,27 @@ class PressFileParser
     private function spiltFile()
     {
         preg_match('/^\-{3}(.*?)\-{3}(.*)/s',
-            File::get($this->filename),
+            File::exists($this->filename) ? File::get($this->filename) : $this->filename,
             $this->data);
+    }
+
+    private function explodeData()
+    {
+        $data = trim($this->data[1]);
+        foreach (explode(PHP_EOL, $data) as $string) {
+             $arr=explode(":",$string);
+             $this->data[trim($arr[0])]=trim($arr[1]);
+        }
+
+    }
+
+    private function processField()
+    {
+      foreach ($this->data as $field => $value) {
+           if ($field === "date") {
+               $this->data[$field] =Carbon::parse($value);
+           }
+      }
+
     }
 }
