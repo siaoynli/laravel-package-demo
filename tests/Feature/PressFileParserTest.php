@@ -28,6 +28,15 @@ class PressFileParserTest extends  TestCase
          $this->assertStringContainsString('Blog post body here',$data[2]);
     }
 
+    /** @test */
+    public function  the_body_gets_saved_and_trimmed(){
+        $pressFileParser=new PressFileParser(__DIR__.'/../blogs/MarkFile1.md');
+
+        $data=$pressFileParser->getData();
+
+        $this->assertEquals("<h1>Header</h1>\n<p>Blog post body here</p>",$data["body"]);
+    }
+
 
     /** @test */
     public function a_date_field_gets_parsed(){
@@ -35,7 +44,6 @@ class PressFileParserTest extends  TestCase
         $pressFileParser=new PressFileParser("---\ndate: May 14, 1988\n---\n");
 
         $data=$pressFileParser->getData();
-
         $this->assertInstanceOf(Carbon::class,$data['date']);
         $this->assertEquals("05/14/1988",$data["date"]->format("m/d/Y"));
     }

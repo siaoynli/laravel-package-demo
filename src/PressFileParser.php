@@ -11,8 +11,8 @@
 namespace Siaoynli\Press;
 
 
-use Carbon\Carbon;
 use Illuminate\Support\Facades\File;
+
 
 class PressFileParser
 {
@@ -41,21 +41,24 @@ class PressFileParser
 
     private function explodeData()
     {
+
         $data = trim($this->data[1]);
         foreach (explode(PHP_EOL, $data) as $string) {
-             $arr=explode(":",$string);
-             $this->data[trim($arr[0])]=trim($arr[1]);
+            $arr = explode(":", $string);
+            $this->data[trim($arr[0])] = trim($arr[1]);
         }
+
+        $this->data["body"] = trim($this->data[2]);
 
     }
 
     private function processField()
     {
-      foreach ($this->data as $field => $value) {
-           if ($field === "date") {
-               $this->data[$field] =Carbon::parse($value);
-           }
-      }
-
+        foreach ($this->data as $field => $value) {
+            $class = "Siaoynli\\Press\\Fields\\" . ucfirst($field);
+            if (class_exists($class) && method_exists($class, "process")) {
+                $this->data = array_merge($this->data, $class::process($field, $value));
+            }
+        }
     }
 }
