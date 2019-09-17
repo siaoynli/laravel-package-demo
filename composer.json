@@ -1,6 +1,6 @@
 {
     "name": "siaoynli/press",
-    "description": "a simple laravel package",
+    "description": "a simple demo for laravel package",
     "license": "MIT",
     "authors": [
         {
@@ -8,8 +8,20 @@
             "email": "siaoynli@126.com"
         }
     ],
-    "require": {},
+    "require": {
+        "erusev/parsedown": "^1.7"
+    },
     "require-dev": {
         "orchestra/testbench": "^4.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Siaoynli\\Press\\": "src/"
+        }
+    },
+    "autoload-dev": {
+         "psr-4": {
+             "Siaoynli\\Press\\Tests\\": "tests/"
+         }
     }
 }
