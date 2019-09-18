@@ -15,6 +15,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Siaoynli\Press\Post;
+use Siaoynli\Press\Press;
 use Siaoynli\Press\PressFileParser;
 
 class ProcessCommand extends Command
@@ -28,24 +29,26 @@ class ProcessCommand extends Command
     public function handle()
     {
 
-        if (is_null(config("press"))) {
+        if (Press::configNotPublish()) {
             return $this->warn("please publish the config file by runing 'php artisan vendor:publish --tag=press-config'");
         }
 
-        $files = File::files(config("press.path"));
+        try{
 
-        foreach ($files as $file) {
-            $post = (new PressFileParser($file->getPathname()))->getData();
+            $posts = Press::driver()->fetchPosts();
+            foreach ($posts as $post) {
+                Post::create([
+                    'identifier' => $post['identifier'],
+                    "slug" => Str::slug($post['title']),
+                    "title" => $post['title'],
+                    "body" => $post['body'],
+                    "extra" => $post['extra'] ?? ''
+                ]);
+            }
+        }catch (\Exception $e) {
+
+            $this->error($e->getMessage());
         }
-
-
-        Post::create([
-            'identifier' => Str::random(),
-            "slug" => Str::slug($post['title']),
-            "title" => $post['title'],
-            "body" => $post['body'],
-            "extra" => $post['extra'] ?? ''
-        ]);
     }
 
 }
