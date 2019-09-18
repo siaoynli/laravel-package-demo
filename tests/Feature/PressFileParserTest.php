@@ -70,4 +70,14 @@ class PressFileParserTest extends  TestCase
         $this->assertEquals(json_encode(['author'=>'John Doe',"image"=>"some/image.jpg"]),$data['extra']);
     }
 
+    /** @test */
+    public function equals_title_and_description(){
+        $pressFileParser=new PressFileParser(__DIR__.'/../blogs/MarkFile1.md');
+
+        $data=$pressFileParser->getData();
+
+        $this->assertEquals('My Title',$data['title']);
+        $this->assertEquals('Description here',$data['description']);
+    }
+
 }

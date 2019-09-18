@@ -13,10 +13,10 @@ namespace Siaoynli\Press\Fields;
 
 use Siaoynli\Press\MarkdownParser;
 
-class Body
+class Body extends  FieldsContract
 {
 
-    public static function process($field,$value, $data)
+    public static function process($field,$value, $data) : array
     {
         return [
             $field=>MarkdownParser::parse($value),

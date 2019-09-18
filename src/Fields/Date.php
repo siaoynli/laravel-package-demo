@@ -13,10 +13,10 @@ namespace Siaoynli\Press\Fields;
 
 use Carbon\Carbon;
 
-class Date
+class Date extends  FieldsContract
 {
 
-    public static function process($field, $value, $data)
+    public static function process($field, $value, $data) :array
     {
         return [
             $field => Carbon::parse($value),
