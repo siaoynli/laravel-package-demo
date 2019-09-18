@@ -12,11 +12,10 @@ namespace Siaoynli\Press\Console;
 
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Siaoynli\Press\Post;
-use Siaoynli\Press\Press;
-use Siaoynli\Press\PressFileParser;
+use  Siaoynli\Press\Facades\Press;
+
 
 class ProcessCommand extends Command
 {

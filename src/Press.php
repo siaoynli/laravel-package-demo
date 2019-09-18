@@ -13,19 +13,19 @@ namespace Siaoynli\Press;
 
 class Press
 {
-    public static function configNotPublish()
+    public  function configNotPublish()
     {
         return is_null(config("press"));
     }
 
-    public static function driver()
+    public  function driver()
     {
         $driver = config("press.driver");
         $class="Siaoynli\Press\Drivers\\".ucfirst($driver).'Driver';
         return new $class;
     }
 
-    public static function path()
+    public  function path()
     {
         return config("press.path","press");
     }
