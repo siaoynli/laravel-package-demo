@@ -33,6 +33,7 @@ class TestCase extends \Orchestra\Testbench\TestCase
     protected function getEnvironmentSetUp($app)
     {
 
+        //自定义数据库链接
 //        $app["config"]->set("database.default", "testdb");
 //        $app["config"]->set("database.connections.mysql",
 //            [
