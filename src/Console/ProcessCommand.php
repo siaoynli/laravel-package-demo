@@ -17,31 +17,35 @@ use Illuminate\Support\Str;
 use Siaoynli\Press\Post;
 use Siaoynli\Press\PressFileParser;
 
-class ProcessCommand extends  Command
+class ProcessCommand extends Command
 {
-    protected $signature="press:process";
+    protected $signature = "press:process";
 
 
-    protected $description="Update blog posts";
+    protected $description = "Update blog posts";
 
 
-    public  function  handle(){
-         $files=File::files('blogs');
+    public function handle()
+    {
 
-          foreach ($files as $file){
-               $post=(new PressFileParser($file->getPathname()))->getData();
-               break;
-          }
+        if (is_null(config("press"))) {
+            return $this->warn("please publish the config file by runing 'php artisan vendor:publish --tag=press-config'");
+        }
+
+        $files = File::files(config("press.path"));
+
+        foreach ($files as $file) {
+            $post = (new PressFileParser($file->getPathname()))->getData();
+        }
 
 
-
-          Post::create([
-              'identifier' => Str::random(),
-              "slug" => Str::slug($post['title']),
-              "title" => $post['title'],
-              "body" => $post['body'],
-              "extra" => $post['extra']??''
-          ]);
+        Post::create([
+            'identifier' => Str::random(),
+            "slug" => Str::slug($post['title']),
+            "title" => $post['title'],
+            "body" => $post['body'],
+            "extra" => $post['extra'] ?? ''
+        ]);
     }
 
 }
