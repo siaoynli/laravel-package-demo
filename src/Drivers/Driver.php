@@ -13,20 +13,20 @@ namespace Siaoynli\Press\Drivers;
 
 use Siaoynli\Press\PressFileParser;
 
-abstract  class Driver
+abstract class Driver
 {
-     protected  $posts=[];
-     protected  $config;
+    protected $posts = [];
+    protected $config;
 
-     public function __construct()
-     {
-         $this->setConfig();
-         $this->validateSource();
-     }
+    public function __construct()
+    {
+        $this->setConfig();
+        $this->validateSource();
+    }
 
     private function setConfig()
     {
-        $this->config=config("press.".config("press.driver"));
+        $this->config = config("press." . config("press.driver"));
     }
 
     protected function validateSource()
@@ -34,11 +34,13 @@ abstract  class Driver
         return true;
     }
 
-    protected function parse($getPathname,  $identifier)
+    protected function parse($getPathname, $identifier)
     {
-        $this->posts[]= array_merge(
+        $this->posts[] = array_merge(
             (new PressFileParser($getPathname))->getData(),
-            ["identifier"=>$identifier]
+            ["identifier" => $identifier]
         );
     }
+
+    public abstract function fetchPosts();
 }

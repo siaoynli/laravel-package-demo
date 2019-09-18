@@ -24,4 +24,9 @@ class Press
         $class="Siaoynli\Press\Drivers\\".ucfirst($driver).'Driver';
         return new $class;
     }
+
+    public static function path()
+    {
+        return config("press.path","press");
+    }
 }

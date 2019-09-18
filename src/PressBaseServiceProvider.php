@@ -11,6 +11,7 @@
 namespace Siaoynli\Press;
 
 
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Siaoynli\Press\Console\ProcessCommand;
 
@@ -19,7 +20,7 @@ class PressBaseServiceProvider extends ServiceProvider
 
     public function boot()
     {
-        if($this->app->runningInConsole()) {
+        if ($this->app->runningInConsole()) {
             $this->registerPublishing();
         }
 
@@ -31,7 +32,7 @@ class PressBaseServiceProvider extends ServiceProvider
     {
 
         $this->commands([
-              ProcessCommand::class,
+            ProcessCommand::class,
         ]);
 
     }
@@ -39,7 +40,9 @@ class PressBaseServiceProvider extends ServiceProvider
     private function registerResources()
     {
 
-        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
+        $this->loadViewsFrom(__DIR__ . '/../resources/views', "press");
+        $this->registerRoutes();
 
     }
 
@@ -47,10 +50,26 @@ class PressBaseServiceProvider extends ServiceProvider
     {
 
         // press-config : vendor:publish   tag 名称
-      $this->publishes([
-          __DIR__.'/../config/press.php' => config_path("press.php")
-      ],"press-config");
+        $this->publishes([
+            __DIR__ . '/../config/press.php' => config_path("press.php")
+        ], "press-config");
 
+    }
+
+    private function registerRoutes()
+    {
+        Route::group($this->routeConfiguration(), function () {
+            $this->loadRoutesFrom(__DIR__ . '/../routes/web.php');
+        });
+    }
+
+    private function routeConfiguration()
+    {
+
+        return [
+            "prefix" => Press::path(),
+            "namespace" => "Siaoynli\Press\Http\Controllers",
+        ];
     }
 
 }

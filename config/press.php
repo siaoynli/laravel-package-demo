@@ -9,8 +9,13 @@
 */
 
 return [
+
     'driver' => 'file',
-    "file"=>[
+
+    "file" => [
         "path" => "blogs",
-    ]
+    ],
+    
+    "path" => "blogs"
 ];
+
