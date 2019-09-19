@@ -12,9 +12,8 @@ namespace Siaoynli\Press\Console;
 
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Str;
-use Siaoynli\Press\Post;
 use  Siaoynli\Press\Facades\Press;
+use Siaoynli\Press\Repositories\PostRepository;
 
 
 class ProcessCommand extends Command
@@ -25,26 +24,22 @@ class ProcessCommand extends Command
     protected $description = "Update blog posts";
 
 
-    public function handle()
+    public function handle(PostRepository $postRepository)
     {
 
         if (Press::configNotPublish()) {
             return $this->warn("please publish the config file by runing 'php artisan vendor:publish --tag=press-config'");
         }
 
-        try{
+        try {
 
             $posts = Press::driver()->fetchPosts();
+            $this->info("number of Posts:" . count($posts));
             foreach ($posts as $post) {
-                Post::create([
-                    'identifier' => $post['identifier'],
-                    "slug" => Str::slug($post['title']),
-                    "title" => $post['title'],
-                    "body" => $post['body'],
-                    "extra" => $post['extra'] ?? ''
-                ]);
+                $postRepository->save($post);
+                $this->info("Post:" . $post['title']);
             }
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
 
             $this->error($e->getMessage());
         }
