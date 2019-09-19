@@ -18,4 +18,8 @@ class Post extends  Model
     protected $guarded=[];
 
 
+    public  function  extra($field){
+        //optional 如果键不存在返回null，不会报错
+        return optional(json_decode($this->extra))->$field;
+    }
 }

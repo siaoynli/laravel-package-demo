@@ -43,6 +43,7 @@ class ProcessCommand extends Command
 
             $this->error($e->getMessage());
         }
+
     }
 
 }

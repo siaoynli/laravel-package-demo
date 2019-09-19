@@ -13,6 +13,7 @@ namespace Siaoynli\Press\Repositories;
 
 use Illuminate\Support\Str;
 use Siaoynli\Press\Post;
+use Illuminate\Support\Arr;
 
 class PostRepository
 {
@@ -24,7 +25,18 @@ class PostRepository
             "slug" => Str::slug($post['title']),
             "title" => $post['title'],
             "body" => $post['body'],
-            "extra" => $post['extra'] ?? json_encode(array())
+            "extra" => $this->extra($post)
         ]);
+    }
+
+    private function extra($post)
+    {
+
+        $extra = json_decode($post["extra"] ?? '[]');
+
+        $attributes= Arr::except($post,['title','body','extra']);
+
+        return json_encode(array_merge($extra,$attributes));
+
     }
 }
