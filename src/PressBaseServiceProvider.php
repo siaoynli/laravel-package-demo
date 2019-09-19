@@ -15,6 +15,11 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Siaoynli\Press\Console\ProcessCommand;
 use \Siaoynli\Press\Facades\Press;
+use Siaoynli\Press\Fields\Body;
+use Siaoynli\Press\Fields\Date;
+use Siaoynli\Press\Fields\Description;
+use Siaoynli\Press\Fields\Extra;
+use Siaoynli\Press\Fields\Title;
 
 class PressBaseServiceProvider extends ServiceProvider
 {
@@ -45,6 +50,7 @@ class PressBaseServiceProvider extends ServiceProvider
         $this->loadViewsFrom(__DIR__ . '/../resources/views', "press");
         $this->registerFacades();
         $this->registerRoutes();
+        $this->registerFields();
     }
 
     private function registerPublishing()
@@ -75,9 +81,20 @@ class PressBaseServiceProvider extends ServiceProvider
 
     private function registerFacades()
     {
-        $this->app->singleton("Press",function($app){
-                return new \Siaoynli\Press\Press();
+        $this->app->singleton("Press", function ($app) {
+            return new \Siaoynli\Press\Press();
         });
+    }
+
+    private function registerFields()
+    {
+        Press::fields([
+            Body::class,
+            Date::class,
+            Description::class,
+            Extra::class,
+            Title::class,
+        ]);
     }
 
 }

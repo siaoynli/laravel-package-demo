@@ -36,6 +36,7 @@ class PostRepository
 
         $attributes= Arr::except($post,['title','body','extra']);
 
+
         return json_encode(array_merge($extra,$attributes));
 
     }

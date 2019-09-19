@@ -28,12 +28,12 @@ class PressFileParser
         $this->processField();
     }
 
-    public function getData() : array
+    public function getData(): array
     {
         return $this->data;
     }
 
-    public function getRawData() : array
+    public function getRawData(): array
     {
         return $this->rawData;
     }
@@ -62,7 +62,8 @@ class PressFileParser
     private function processField()
     {
         foreach ($this->data as $field => $value) {
-            $class = "Siaoynli\\Press\\Fields\\" . ucfirst($field);
+            //  $class = "Siaoynli\\Press\\Fields\\" . ucfirst($field);
+            $class = $this->getField($field);
             if (!class_exists($class) && !method_exists($class, "process")) {
                 $class = "Siaoynli\\Press\\Fields\\Extra";
             }
@@ -70,6 +71,17 @@ class PressFileParser
                 $this->data,
                 $class::process($field, $value, $this->data)
             );
+        }
+    }
+
+    private function getField($field)
+    {
+        foreach (\Siaoynli\Press\Facades\Press::availableFields() as $availableField) {
+            $class = new \ReflectionClass($availableField);
+
+            if ($class->getShortName() == ucfirst($field)) {
+                    return $class->getName();
+            }
         }
     }
 }
